@@ -74,6 +74,10 @@ UNITTEST_START
     { "::1", "0:0::1", 128, TRUE},
     { "::1", "0:0::1", 129, FALSE},
     { "fe80::ab47:4396:55c9:8474", "fe80::ab47:4396:55c9:8474", 64, TRUE},
+    { "fc00::", "fd00:ec2::254", 7, TRUE},
+    { "fc00::", "fe00::1", 7, FALSE},
+    { "fe80::", "fe80::ab47:4396:55c9:8474", 10, TRUE},
+    { "fe80::", "fd00:ec2::254", 10, FALSE},
     { NULL, NULL, 0, FALSE} /* end marker */
   };
   struct noproxy list[]= {
