@@ -65,7 +65,9 @@ UNITTEST_START
     { "192.160.0.1", "192.160.0.1", 8, TRUE},
     { "192.160.0.1", "10.0.0.1", 8, FALSE},
     { "192.160.0.1", "10.0.0.1", 32, FALSE},
-    { "192.160.0.1", "10.0.0.1", 0, FALSE},
+    { "192.160.0.1", "10.0.0.1", 0, TRUE},
+    { "192.160.0.1", "0.0.0.0", 0, TRUE},
+    { "192.160.0.1", "0.0.0.0", 32, FALSE},
     { NULL, NULL, 0, FALSE} /* end marker */
   };
   struct check list6[]= {
@@ -74,6 +76,8 @@ UNITTEST_START
     { "::1", "0:0::1", 128, TRUE},
     { "::1", "0:0::1", 129, FALSE},
     { "fe80::ab47:4396:55c9:8474", "fe80::ab47:4396:55c9:8474", 64, TRUE},
+    { "::", "::1", 0, TRUE},
+    { "::", "fd00:ec2::254", 0, TRUE},
     { "fc00::", "fd00:ec2::254", 7, TRUE},
     { "fc00::", "fe00::1", 7, FALSE},
     { "fe80::", "fe80::ab47:4396:55c9:8474", 10, TRUE},
@@ -129,6 +133,10 @@ UNITTEST_START
     { "www.example.com", "www2.example.com, .example.net", FALSE},
     { "example.com", ".example.com, .example.net", TRUE},
     { "nonexample.com", ".example.com, .example.net", FALSE},
+    { "192.168.0.1", "0.0.0.0/0", TRUE},
+    { "192.168.0.1", "0.0.0.0", FALSE},
+    { "[::1]", "::/0", TRUE},
+    { "[::1]", "::", FALSE},
     { NULL, NULL, FALSE}
   };
   for(i = 0; list4[i].a; i++) {

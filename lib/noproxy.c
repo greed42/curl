@@ -71,6 +71,9 @@ UNITTEST bool Curl_cidr4_match(const char *ipv4,    /* 1.2.3.4 address */
       return FALSE;
     return TRUE;
   }
+  if(!bits)
+    /* all addresses match, canonically as 0.0.0.0/0. */
+    return TRUE;
   return (address == check);
 }
 
@@ -83,9 +86,6 @@ UNITTEST bool Curl_cidr6_match(const char *ipv6,
   unsigned int rest;
   unsigned char address[16];
   unsigned char check[16];
-
-  if(!bits)
-    bits = 128;
 
   bytes = bits / 8;
   rest = bits & 0x07;
@@ -236,6 +236,10 @@ bool Curl_check_noproxy(const char *name, const char *no_proxy)
             bits = (unsigned int)atoi(slash + 1);
             *slash = 0; /* null terminate there */
           }
+          else if(type == TYPE_IPV6)
+            bits = 128; /* an address, all bits must match. */
+          else
+            bits = 32;
           if(type == TYPE_IPV6)
             match = Curl_cidr6_match(name, check, bits);
           else
